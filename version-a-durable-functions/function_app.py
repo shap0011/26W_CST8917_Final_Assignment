@@ -19,10 +19,12 @@ async def start_expense_workflow(req: func.HttpRequest, client):
 
     instance_id = await client.start_new("expense_orchestrator", None, data)
 
-    return func.HttpResponse(
-        json.dumps({"instance_id": instance_id}),
-        mimetype="application/json"
-    )
+    # return func.HttpResponse(
+    #     json.dumps({"instance_id": instance_id}),
+    #     mimetype="application/json"
+    # )
+    
+    return client.create_check_status_response(req, instance_id)
 
 
 # ==============================
