@@ -1,0 +1,11 @@
+POST http://localhost:7071/api/start_expense HTTP/1.1
+Content-Type: application/json
+
+{
+  "employee_name": "Olha",
+  "employee_email": "olha@example.com",
+  "amount": 50,
+  "category": "meals",
+  "description": "Team lunch",
+  "manager_email": "manager@example.com"
+}
