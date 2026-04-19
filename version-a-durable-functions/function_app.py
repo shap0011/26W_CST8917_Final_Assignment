@@ -66,7 +66,15 @@ def expense_orchestrator(context: df.DurableOrchestrationContext):
     winner = yield context.task_any([approval_task, timeout_task])
 
     if winner == approval_task:
-        decision = approval_task.result.get("decision", "approved")
+        event_payload = approval_task.result
+
+        if isinstance(event_payload, str):
+            try:
+                event_payload = json.loads(event_payload)
+            except json.JSONDecodeError:
+                event_payload = {"decision": event_payload}
+
+        decision = event_payload.get("decision", "approved")
 
         if decision == "rejected":
             result = {
@@ -80,9 +88,7 @@ def expense_orchestrator(context: df.DurableOrchestrationContext):
                 "escalated": False,
                 "data": data
             }
-
     else:
-        # Timeout case
         result = {
             "status": "approved",
             "escalated": True,
